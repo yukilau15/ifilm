@@ -13,21 +13,21 @@ import "./App.css";
 
 function App() {
   return (
-      <BrowserRouter>
-        <div className="App">
-          <NavBar />
-          <Switch>
-            <Route path="/" component={Home} exact />
-            <Route path="/dramas" component={Dramas} />
-            <Route path="/movies" component={Movies} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/moviedetail/:id" component={MDetail} />
-            <Route path="/dramadetail/:id" component={DDetail} />
-            <Route path="/signin" component={Signin} />
-            <Route path="/signup" component={Signup} />
-          </Switch>
-        </div>
-      </BrowserRouter>
+    <BrowserRouter>
+      <div className="App">
+        <NavBar />
+        <Switch>
+          <Route path="/" component={Home} exact />
+          <Route path="/dramas" component={Dramas} />
+          <Route path="/movies" component={Movies} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/moviedetail/:id" component={MDetail} />
+          <Route path="/dramadetail/:id" component={DDetail} />
+          <Route path="/signin" component={Signin} />
+          <Route path="/signup" component={Signup} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
