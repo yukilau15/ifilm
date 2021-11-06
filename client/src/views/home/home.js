@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Content from "../../components/content";
-import Slideshow from "../../components/slideshow";
+import Slider from "react-animated-slider";
+import "react-animated-slider/build/horizontal.css";
 import "../../App.css";
 
 const Home = () => {
@@ -24,6 +25,28 @@ const Home = () => {
   }, []);
 
   return (
+    <>
+      <div className="position-relative">
+        <Slider autoplay={3000}>
+          {slideshow.map((c, index) => (
+            <div
+              key={index}
+              style={{
+                background: `linear-gradient(to bottom, rgba(255,255,255,0) 30%, rgba(0,0,0)), url('https://image.tmdb.org/t/p/w1280/${c.backdrop_path}') no-repeat center center`,
+              }}
+            >
+              <div className="position-absolute top-50 start-50 translate-middle">
+                <div>
+                  <h1>{c.name || c.title}</h1>
+                </div>
+                <div>
+                  <p>{c.overview}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
       <div className="container">
         <h1 className="pt-3">Trending</h1>
         <div className="wrap-content pb-3">
@@ -37,6 +60,7 @@ const Home = () => {
           ))}
         </div>
       </div>
+    </>
   );
 };
 

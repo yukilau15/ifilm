@@ -1,18 +1,9 @@
 const express = require("express");
+const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const router = express.Router();
-const Users = require("../models/users");
 const auth = require("../middlewares/auth");
-
-router.delete("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    //delete session data from store, using sessionID in cookie
-    if (err) throw err;
-    res.clearCookie("session-id"); // clears cookie containing expired sessionID
-    res.send("Logged out successfully");
-  });
-});
+const Users = require("../models/users");
 
 //REQUEST SIGNIN
 router.post("/signin", async (req, res) => {
