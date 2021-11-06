@@ -4,7 +4,10 @@ import "../App.css";
 
 const Content = ({ id, title, image, media }) => {
   return (
-    <Link to={media == "tv" ? `/dramadetail/${id}`: `/moviedetail/${id}`} className="media">
+    <Link
+      to={media == "tv" ? `/dramadetail/${id}` : `/moviedetail/${id}`}
+      className="media"
+    >
       <img className="img" src={image ? `${img_300}${image}` : unavailable} />
       <p className="title">{title}</p>
     </Link>

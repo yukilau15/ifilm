@@ -22,7 +22,8 @@ const MDetail = ({ match }) => {
   var movieGenreArray = new Array();
   var movieLanguageArray = new Array();
 
-  var getMovieTitle,
+  var movie_id,
+    getMovieTitle,
     getMovieImage,
     getMovieOverview,
     getMovieRated,
@@ -30,6 +31,8 @@ const MDetail = ({ match }) => {
     getMovieRuntime,
     getMovieLanguage,
     getVideoKey;
+
+  movie_id = "1234";
 
   const fetchVideo = async (id) => {
     movieAPI1 = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}`;
@@ -58,9 +61,9 @@ const MDetail = ({ match }) => {
 
       getMovieGenre = movieGenreArray.join(", ");
 
-      for (var i = 0; i < response.data.spoken_languages.length; i++) {
-        movieLanguageArray[i] = JSON.stringify(
-          response.data.spoken_languages[i].english_name
+      for (var j = 0; j < response.data.spoken_languages.length; j++) {
+        movieLanguageArray[j] = JSON.stringify(
+          response.data.spoken_languages[j].english_name
         ).replace(/"/g, "");
       }
 
@@ -85,6 +88,23 @@ const MDetail = ({ match }) => {
     });
   };
 
+  const getvalue = (id) => {
+    console.log(id);
+ }
+
+  const onClick = (e) => {
+    e.preventDefault();
+
+    const movies = {
+      movie_id,
+    };
+
+    axios
+      .post("movielist/add", movies)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     fecthData(match.params.id);
     fetchVideo(match.params.id);
@@ -92,14 +112,14 @@ const MDetail = ({ match }) => {
 
   return (
     <div className="container">
-      <div class="d-md-flex flex-md-equal w-100">
-        <div class="me-md-3">
-          <div class="my-3">
+      <div className="d-md-flex flex-md-equal w-100">
+        <div className="me-md-3">
+          <div className="my-3">
             <img src={movieImage ? `${img_300}${movieImage}` : unavailable} />
           </div>
         </div>
-        <div class="d-flex align-items-center me-md-3">
-          <div class="my-3">
+        <div className="d-flex align-items-center me-md-3">
+          <div className="my-3">
             <h3>{movieTitle}</h3>
             <span>
               {movieRated}&emsp;
@@ -107,10 +127,10 @@ const MDetail = ({ match }) => {
               {movieRuntime}&ensp;&#9679;&ensp;
               {movieLanguage}
             </span>
-            <h4 class="pt-3">Overview</h4>
+            <h4 className="pt-3">Overview</h4>
             <p>{movieOverview}</p>
             <a
-              class="btn btn-secondary me-md-3"
+              className="btn btn-secondary me-md-3"
               target="_blank"
               href={`https://www.youtube.com/watch?v=${videoKey}`}
             >
@@ -118,17 +138,22 @@ const MDetail = ({ match }) => {
                 <Icon.PlayFill /> Play Trailer
               </span>
             </a>
-            <button class="btn btn-secondary me-md-3">
+            <button className="btn btn-secondary me-md-3">
               <span>
                 <Icon.Heart />
               </span>
             </button>
-            <button class="btn btn-secondary me-md-3">
+            <button
+              type="button"
+              className="btn btn-secondary me-md-3"
+              value={movieRated}
+              onClick={getvalue}
+            >
               <span>
                 <Icon.Bookmark />
               </span>
             </button>
-            <button class="btn btn-secondary me-md-3">
+            <button className="btn btn-secondary me-md-3">
               <span>
                 <Icon.Star />
               </span>

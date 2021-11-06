@@ -1,18 +1,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Content from "../../components/content";
+import Genres from "../../components/genres";
+import useGenre from "../../hooks/useGenre";
 import * as Icon from "react-bootstrap-icons";
 import "../../App.css";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [keywords, setKeywords] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+
+  const genreURL = useGenre(selectedGenres);
 
   const TMDB_API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 
   const fetchData = async () => {
     const { data } = await axios.get(
-      `https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`
+      //`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`
+
+      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&with_genres=${genreURL}`
+
     );
 
     setMovies(data.results);
@@ -23,27 +32,27 @@ const Movies = () => {
       `https://api.themoviedb.org/3/search/movie/?api_key=${TMDB_API_KEY}&query=${keywords}`
     );
 
-    setMovies(data.results);
+      setMovies(data.results);
   };
 
   useEffect(() => {
     fetchData();
     fetchSearch();
-  }, []);
+  }, [genreURL]);
 
   return (
     <div className="container">
-      <h1 class="pt-3">Movies</h1>
-      <div class="input-group mb-3">
+      <h1 className="pt-3">Movies</h1>
+      <div className="input-group mb-3">
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           placeholder="Search"
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
         />
         <button
-          class="btn btn-secondary"
+          className="btn btn-secondary"
           type="button"
           onClick={fetchSearch}
           aria-label="Search"
@@ -52,6 +61,15 @@ const Movies = () => {
             <Icon.Search />
           </span>
         </button>
+      </div>
+      <div className="mb-3">
+        <Genres
+          type="movie"
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+          genres={genres}
+          setGenres={setGenres}
+        />
       </div>
       <div className="wrap-content pb-3">
         {movies.map((m) => (

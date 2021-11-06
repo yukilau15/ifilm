@@ -92,14 +92,14 @@ const DDetail = ({ match }) => {
 
   return (
     <div className="container">
-      <div class="d-md-flex flex-md-equal w-100">
-        <div class="me-md-3">
-          <div class="my-3">
+      <div className="d-md-flex flex-md-equal w-100">
+        <div className="me-md-3">
+          <div className="my-3">
             <img src={dramaImage ? `${img_300}${dramaImage}` : unavailable} />
           </div>
         </div>
-        <div class="d-flex align-items-center me-md-3">
-          <div class="my-3">
+        <div className="d-flex align-items-center me-md-3">
+          <div className="my-3">
             <h3>{dramaTitle}</h3>
             <span>
               {dramaRated}&emsp;
@@ -107,10 +107,10 @@ const DDetail = ({ match }) => {
               {dramaRuntime}&ensp;&#9679;&ensp;
               {dramaLanguage}
             </span>
-            <h4 class="pt-3">Overview</h4>
+            <h4 className="pt-3">Overview</h4>
             <p>{dramaOverview}</p>
             <a
-              class="btn btn-secondary me-md-3"
+              className="btn btn-secondary me-md-3"
               target="_blank"
               href={`https://www.youtube.com/watch?v=${videoKey}`}
             >
@@ -118,17 +118,17 @@ const DDetail = ({ match }) => {
                 <Icon.PlayFill /> Play Trailer
               </span>
             </a>
-            <button class="btn btn-secondary me-md-3">
+            <button className="btn btn-secondary me-md-3">
               <span>
                 <Icon.Heart />
               </span>
             </button>
-            <button class="btn btn-secondary me-md-3">
+            <button className="btn btn-secondary me-md-3">
               <span>
                 <Icon.Bookmark />
               </span>
             </button>
-            <button class="btn btn-secondary me-md-3">
+            <button className="btn btn-secondary me-md-3">
               <span>
                 <Icon.Star />
               </span>

@@ -1,5 +1,5 @@
+import React, { useState } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 
 const Signup = () => {
   const [name, setName] = useState([]);
@@ -28,7 +28,7 @@ const Signup = () => {
   return (
     <div className="container">
       <div id="background">
-        <img src="/background.jpg" class="stretch" alt="" />
+        <img src="/background.jpg" className="stretch" alt="" />
       </div>
       <div className="form-box">
         <form
@@ -36,37 +36,37 @@ const Signup = () => {
           encType="multipart/form-data"
           className="form-group text-center"
         >
-          <h1 class="h3 text-black mb-3 fw-normal">Sign Up</h1>
-          <div class="input-group mb-3">
+          <h1 className="h3 text-black mb-3 fw-normal">Sign Up</h1>
+          <div className="input-group mb-3">
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               placeholder="Username"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="email"
-              class="form-control"
+              className="form-control"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <button class="w-100 btn btn-lg btn-secondary mb-3" type="submit">
+          <button className="w-100 btn btn-lg btn-secondary mb-3" type="submit">
             Sign Up
           </button>
           <div>

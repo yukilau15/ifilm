@@ -25,7 +25,7 @@ const Home = () => {
 
   return (
       <div className="container">
-        <h1 class="pt-3">Trending</h1>
+        <h1 className="pt-3">Trending</h1>
         <div className="wrap-content pb-3">
           {content.map((c) => (
             <Content

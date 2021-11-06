@@ -5,14 +5,13 @@ const router = express.Router();
 const Users = require("../models/users");
 const auth = require("../middlewares/auth");
 
-router.get("/", auth, async (req, res) => {
-  try {
-    const user = await (await Users.findById(req.user.id)).select('-password')
-    res.json(user);
-  } catch(err) {
-    res.status(500).send("Server Error")
-  }
-  res.send("Get logged user");
+router.delete("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    //delete session data from store, using sessionID in cookie
+    if (err) throw err;
+    res.clearCookie("session-id"); // clears cookie containing expired sessionID
+    res.send("Logged out successfully");
+  });
 });
 
 //REQUEST SIGNIN
@@ -22,13 +21,15 @@ router.post("/signin", async (req, res) => {
   let user = await Users.findOne({ email });
 
   if (!user) {
-    console.log("User not found");
+    res.json("User not found");
   } else {
     const password_match = await bcrypt.compare(password, user.password);
 
     if (!password_match) {
-      console.log("Password wrong");
+      res.json("Password wrong");
     } else {
+      req.sessioncookie.user = user;
+
       const payload = {
         user: {
           id: user.id,
@@ -57,7 +58,7 @@ router.post("/signup", async (req, res) => {
   let user = await Users.findOne({ email });
 
   if (user) {
-    console.log("Email is taken");
+    res.json("Email is taken");
   } else {
     user = new Users({
       name,
@@ -71,7 +72,7 @@ router.post("/signup", async (req, res) => {
     user
       .save()
       .then(() => res.json("Create and account successfully!"))
-      .catch((err) => res.status(400).send(err));
+      .catch(() => res.json("Fail to create an account"));
 
     const payload = {
       user: {
@@ -91,6 +92,16 @@ router.post("/signup", async (req, res) => {
       }
     );
   }
+});
+
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await (await Users.findById(req.user.id)).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+  res.send("Get logged user");
 });
 
 //REQUEST GET ALL USERS
