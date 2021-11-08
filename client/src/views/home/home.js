@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import NavBar from "../../components/navbar";
 import Content from "../../components/content";
 import Slider from "react-animated-slider";
 import "react-animated-slider/build/horizontal.css";
@@ -26,6 +27,7 @@ const Home = () => {
 
   return (
     <>
+      <NavBar />
       <div className="position-relative">
         <Slider autoplay={3000}>
           {slideshow.map((c, index) => (

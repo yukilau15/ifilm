@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const Signin = () => {
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
+  const history = useHistory();
 
   const changeOnClick = (e) => {
     e.preventDefault();
@@ -18,8 +20,14 @@ const Signin = () => {
 
     axios
       .post("users/signin", users)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => {localStorage.setItem("token", res.data);
+        return res; // data comes from the return of res
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          history.push("/home");
+        }
+      });
   };
 
   return (

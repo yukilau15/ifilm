@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import NavBar from "../../components/navbar";
 import Content from "../../components/content";
 import Genres from "../../components/genres";
 import useGenre from "../../hooks/useGenre";
@@ -21,7 +22,6 @@ const Movies = () => {
       //`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`
 
       `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&with_genres=${genreURL}`
-
     );
 
     setMovies(data.results);
@@ -32,7 +32,7 @@ const Movies = () => {
       `https://api.themoviedb.org/3/search/movie/?api_key=${TMDB_API_KEY}&query=${keywords}`
     );
 
-      setMovies(data.results);
+    setMovies(data.results);
   };
 
   useEffect(() => {
@@ -41,47 +41,50 @@ const Movies = () => {
   }, [genreURL]);
 
   return (
-    <div className="container">
-      <h1 className="pt-3">Movies</h1>
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-        />
-        <button
-          className="btn btn-secondary"
-          type="button"
-          onClick={fetchSearch}
-          aria-label="Search"
-        >
-          <span>
-            <Icon.Search />
-          </span>
-        </button>
-      </div>
-      <div className="mb-3">
-        <Genres
-          type="movie"
-          selectedGenres={selectedGenres}
-          setSelectedGenres={setSelectedGenres}
-          genres={genres}
-          setGenres={setGenres}
-        />
-      </div>
-      <div className="wrap-content pb-3">
-        {movies.map((m) => (
-          <Content
-            id={m.id}
-            title={m.title}
-            image={m.poster_path}
-            media={m.media_type || "movie"}
+    <>
+      <NavBar />
+      <div className="container">
+        <h1 className="pt-3">Movies</h1>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
           />
-        ))}
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={fetchSearch}
+            aria-label="Search"
+          >
+            <span>
+              <Icon.Search />
+            </span>
+          </button>
+        </div>
+        <div className="mb-3">
+          <Genres
+            type="movie"
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
+            genres={genres}
+            setGenres={setGenres}
+          />
+        </div>
+        <div className="wrap-content pb-3">
+          {movies.map((m) => (
+            <Content
+              id={m.id}
+              title={m.title}
+              image={m.poster_path}
+              media={m.media_type || "movie"}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

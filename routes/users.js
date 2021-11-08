@@ -4,6 +4,48 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const auth = require("../middlewares/auth");
 const Users = require("../models/users");
+const Sessions = require("../models/sessions");
+
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = (await Users.findById(req.user.id)).select("-password");
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error");
+  }
+});
+
+router.get("/session", async (req, res) => {
+  const { token } = req.body;
+
+  const jwt = token;
+
+  let session = await Sessions.findOne(jwt);
+
+  if (session) {
+    const _id = session.user_id;
+
+    Users.findById(_id)
+    .then((user) => res.status(200).json({user}))
+    .catch((err) => res.status(400).send(err));
+
+    //res.status(200).json(session.user_id)
+  }
+});
+
+//REQUEST FIND USER BY ID AND UPDATE
+router.put("/update/:id", (req, res) => {
+  Users.findById(req.params.id)
+    .then((user) => {
+      user.bio = req.body.bio;
+
+      user
+        .save()
+        .then(() => res.json("Update successfully!"))
+        .catch((err) => res.status(400).send(err));
+    })
+});
 
 //REQUEST SIGNIN
 router.post("/signin", async (req, res) => {
@@ -19,8 +61,6 @@ router.post("/signin", async (req, res) => {
     if (!password_match) {
       res.json("Password wrong");
     } else {
-      req.sessioncookie.user = user;
-
       const payload = {
         user: {
           id: user.id,
@@ -36,6 +76,19 @@ router.post("/signin", async (req, res) => {
         (err, token) => {
           if (err) throw err;
           res.json(token);
+
+          const user_id = user.id;
+          const jwt = token;
+
+          session = new Sessions({
+            user_id,
+            jwt,
+          });
+
+          session
+            .save()
+            .then(() => res.json("Add succesfully"))
+            .catch(() => res.json("Error"));
         }
       );
     }
@@ -85,49 +138,26 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.get("/", auth, async (req, res) => {
-  try {
-    const user = await (await Users.findById(req.user.id)).select("-password");
-    res.json(user);
-  } catch (err) {
-    res.status(500).send("Server Error");
-  }
-  res.send("Get logged user");
-});
-
-//REQUEST GET ALL USERS
-router.get("/", (req, res) => {
-  Users.find()
-    .then((user) => res.status(200).json(user))
-    .catch((err) => res.status(400).send(err));
-});
-
-//REQUEST FIND USER BY ID
-router.get("/:id", (req, res) => {
-  Users.findById(req.params.id)
-    .then((user) => res.json(user))
-    .catch((err) => res.status(400).send(err));
-});
-
 //REQUEST FIND USER BY ID AND UPDATE
 router.put("/update/:id", (req, res) => {
   Users.findById(req.params.id)
     .then((user) => {
-      user.name = req.body.name;
-      user.email = req.body.email;
-      user.password = req.body.password;
+      user.bio = req.body.bio;
 
       user
         .save()
         .then(() => res.json("Update successfully!"))
         .catch((err) => res.status(400).send(err));
     })
-    .catch((err) => res.status(400).send(err));
 });
 
 //REQUEST FIND USER BY ID AND DELETE
-router.delete("/:id", (req, res) => {
-  Users.findByIdAndDelete(req.params.id)
+router.post("/delete", (req, res) => {
+  const { uid } = req.body;
+
+  const user_id = uid;
+
+  Sessions.findOneAndDelete({user_id})
     .then(() => res.json("Delete successfully!"))
     .catch((err) => res.status(400).send(err));
 });

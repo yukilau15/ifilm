@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const Signup = () => {
   const [name, setName] = useState([]);
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
+  const history = useHistory();
 
   const changeOnClick = (e) => {
     e.preventDefault();
@@ -19,10 +21,11 @@ const Signup = () => {
     setEmail("");
     setPassword("");
 
-    axios
-      .post("users/signup", users)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+    axios.post("users/signup", users).then((data) => {
+      if (data.status === 200) {
+        history.push("/");
+      }
+    });
   };
 
   return (
@@ -71,7 +74,7 @@ const Signup = () => {
           </button>
           <div>
             <span className="text-black">
-              Already an user? <a href="/signin">Sign In</a>
+              Already an user? <a href="/">Sign In</a>
             </span>
           </div>
         </form>

@@ -25,6 +25,6 @@ connection.once("open", () =>
 );
 
 app.use("/users", require("./routes/users"));
-app.use("/movielist", require("./routes/movielist"));
+app.use("/films", require("./routes/films"));
 
 app.listen(port, () => console.log(`The app is running on Port: ${port}`));

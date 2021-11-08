@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import NavBar from "../../components/navbar";
 import Content from "../../components/content";
 import Genres from "../../components/genres";
 import useGenre from "../../hooks/useGenre";
@@ -40,47 +41,50 @@ const Dramas = () => {
   }, [genreURL]);
 
   return (
-    <div className="container">
-      <h1 className="pt-3">Dramas</h1>
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-        />
-        <button
-          className="btn btn-secondary"
-          type="button"
-          onClick={fetchSearch}
-          aria-label="Search"
-        >
-          <span>
-            <Icon.Search />
-          </span>
-        </button>
-      </div>
-      <div className="mb-3">
-        <Genres
-          type="tv"
-          selectedGenres={selectedGenres}
-          setSelectedGenres={setSelectedGenres}
-          genres={genres}
-          setGenres={setGenres}
-        />
-      </div>
-      <div className="wrap-content pb-3">
-        {dramas.map((d) => (
-          <Content
-            id={d.id}
-            title={d.name}
-            image={d.poster_path}
-            media={d.media_type || "tv"}
+    <>
+      <NavBar />
+      <div className="container">
+        <h1 className="pt-3">Dramas</h1>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
           />
-        ))}
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={fetchSearch}
+            aria-label="Search"
+          >
+            <span>
+              <Icon.Search />
+            </span>
+          </button>
+        </div>
+        <div className="mb-3">
+          <Genres
+            type="tv"
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
+            genres={genres}
+            setGenres={setGenres}
+          />
+        </div>
+        <div className="wrap-content pb-3">
+          {dramas.map((d) => (
+            <Content
+              id={d.id}
+              title={d.name}
+              image={d.poster_path}
+              media={d.media_type || "tv"}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

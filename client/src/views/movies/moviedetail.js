@@ -1,12 +1,15 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { img_300, unavailable } from "../../config/config";
+import NavBar from "../../components/navbar";
 import * as Icon from "react-bootstrap-icons";
 import "../../App.css";
 
 const MDetail = ({ match }) => {
+  const [movieID, setMovieID] = useState([]);
   const [movieTitle, setMovieTitle] = useState([]);
   const [movieImage, setMovieImage] = useState([]);
+  const [movieImageLandscape, setMovieImageLandscape] = useState([]);
   const [movieOverview, setMovieOverview] = useState([]);
   const [movieRated, setMovieRated] = useState([]);
   const [movieGenre, setMovieGenre] = useState([]);
@@ -22,17 +25,16 @@ const MDetail = ({ match }) => {
   var movieGenreArray = new Array();
   var movieLanguageArray = new Array();
 
-  var movie_id,
+  var getMovieID,
     getMovieTitle,
     getMovieImage,
+    getMovieImageLandscape,
     getMovieOverview,
     getMovieRated,
     getMovieGenre,
     getMovieRuntime,
     getMovieLanguage,
     getVideoKey;
-
-  movie_id = "1234";
 
   const fetchVideo = async (id) => {
     movieAPI1 = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}`;
@@ -48,8 +50,10 @@ const MDetail = ({ match }) => {
     movieAPI1 = `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}`;
 
     axios.get(movieAPI1).then((response) => {
+      getMovieID = response.data.id;
       getMovieTitle = response.data.title;
       getMovieImage = response.data.poster_path;
+      getMovieImageLandscape = response.data.backdrop_path;
       getMovieOverview = response.data.overview;
       getMovieRuntime = response.data.runtime + " min";
 
@@ -77,8 +81,10 @@ const MDetail = ({ match }) => {
         getMovieRuntime = response.data.Runtime || `${getMovieRuntime}`;
         getMovieLanguage = response.data.Language || `${getMovieLanguage}`;
 
+        setMovieID(getMovieID);
         setMovieTitle(getMovieTitle);
         setMovieImage(getMovieImage);
+        setMovieImageLandscape(getMovieImageLandscape);
         setMovieRated(getMovieRated);
         setMovieGenre(getMovieGenre);
         setMovieRuntime(getMovieRuntime);
@@ -88,21 +94,16 @@ const MDetail = ({ match }) => {
     });
   };
 
-  const getvalue = (id) => {
-    console.log(id);
- }
-
-  const onClick = (e) => {
-    e.preventDefault();
-
-    const movies = {
-      movie_id,
-    };
+  const save = (id) => {
+    const fid = id;
+    const ftitle = movieTitle;
+    const fimage = movieImageLandscape;
+    const ftype = "movie";
+    const foverview = movieOverview;
 
     axios
-      .post("movielist/add", movies)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .post("/films/add", { fid, ftitle, fimage, ftype, foverview })
+      .then(() => alert("Add successfully!"));
   };
 
   useEffect(() => {
@@ -111,57 +112,52 @@ const MDetail = ({ match }) => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="d-md-flex flex-md-equal w-100">
-        <div className="me-md-3">
-          <div className="my-3">
-            <img src={movieImage ? `${img_300}${movieImage}` : unavailable} />
+    <>
+      <NavBar />
+      <div className="container">
+        <div className="d-md-flex flex-md-equal w-100">
+          <div className="me-md-3">
+            <div className="my-3">
+              <img
+                className="img"
+                src={movieImage ? `${img_300}${movieImage}` : unavailable}
+              />
+            </div>
           </div>
-        </div>
-        <div className="d-flex align-items-center me-md-3">
-          <div className="my-3">
-            <h3>{movieTitle}</h3>
-            <span>
-              {movieRated}&emsp;
-              {movieGenre}&ensp;&#9679;&ensp;
-              {movieRuntime}&ensp;&#9679;&ensp;
-              {movieLanguage}
-            </span>
-            <h4 className="pt-3">Overview</h4>
-            <p>{movieOverview}</p>
-            <a
-              className="btn btn-secondary me-md-3"
-              target="_blank"
-              href={`https://www.youtube.com/watch?v=${videoKey}`}
-            >
+          <div className="d-flex align-items-center me-md-3">
+            <div className="my-3">
+              <h3>{movieTitle}</h3>
               <span>
-                <Icon.PlayFill /> Play Trailer
+                {movieRated}&emsp;
+                {movieGenre}&ensp;&#9679;&ensp;
+                {movieRuntime}&ensp;&#9679;&ensp;
+                {movieLanguage}
               </span>
-            </a>
-            <button className="btn btn-secondary me-md-3">
-              <span>
-                <Icon.Heart />
-              </span>
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary me-md-3"
-              value={movieRated}
-              onClick={getvalue}
-            >
-              <span>
-                <Icon.Bookmark />
-              </span>
-            </button>
-            <button className="btn btn-secondary me-md-3">
-              <span>
-                <Icon.Star />
-              </span>
-            </button>
+              <h4 className="pt-3">Overview</h4>
+              <p>{movieOverview}</p>
+              <a
+                className="btn btn-secondary me-md-3"
+                target="_blank"
+                href={`https://www.youtube.com/watch?v=${videoKey}`}
+              >
+                <span>
+                  <Icon.PlayFill /> Play Trailer
+                </span>
+              </a>
+              <button
+                type="button"
+                className="btn btn-secondary me-md-3"
+                onClick={() => save(movieID)}
+              >
+                <span>
+                  <Icon.Bookmark />
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
