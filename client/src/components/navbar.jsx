@@ -64,7 +64,7 @@ const NavBar = () => {
           </ul>
 
           <div className="col-md-3 text-end">
-            <button className="btn btn-secondary" onClick={() => signOut()}>
+            <button className="btn btn-secondary" style={{ width: "105.12px" }} onClick={() => signOut()}>
               <span>Sign Out</span>
             </button>
           </div>
